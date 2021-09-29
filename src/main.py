@@ -16,37 +16,30 @@ async def on_ready():  # When the bot is ready
     print("I'm in")
     print(bot.user)  # Prints the bot's username and identifier
 
-@bot.event
-async def on_message(message):  # When !name is called
-    if message.content == "!name" :
-        response = message.author
-        await message.channel.send(response)
 
 @bot.command()
 async def pong(ctx):
     await ctx.send('pong')
 
 @bot.command()
-async def mute (ctx, member : discord.User=None, reason = None): # When !mute xxx is called / disabling all textual channels permissions
-    # server = ctx.message.server
-    # perms = discord.Permissions(send_messages=False, read_messages=True)
-    # role = get(ctx.guild.roles, name="Ghost")
+async def mute (ctx, member : discord.User=None, reason = None):
     print("test 0")
-    # if role : 
-    #     print("test 1")
-    #     if Ghost in member.roles: 
-    #         await member.delete_roles(member, get(member.server.roles, name="Ghost"))
-    #     else:
-    #         await member.add_roles(member, get(member.server.roles, name="Ghost"))
-    # else :
-    #     print("test 2")
-    #     await ctx.create_role(server, name='Ghost', permissions=perms)
-    #     await member.add_roles(member, get(member.server.roles, name="Ghost"))
 
 @bot.command()
 async def ban (ctx, member : discord.User=None, reason = None):
     await ctx.guild.ban(member, reason=reason)
     await ctx.channel.send(f"{member} is banned!")
+
+@bot.command(name="admin")
+@commands.has_permissions(manage_roles=True)
+async def admin (ctx, member : discord.User=None):
+    admin_role = None
+    for role in ctx.guild.roles:
+        if role.name == "ADMIN":
+            admin_role = role
+    await member.add_roles(admin_role)
+    await ctx.channel.send(f'{member} is now an admin')
+
 
 token = DISCORD_TOKEN
 bot.run(token)  # Starts the bot
