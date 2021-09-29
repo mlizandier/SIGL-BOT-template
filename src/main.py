@@ -28,6 +28,7 @@ async def name (ctx):  # When !name is called
 @bot.command(name="admin")
 @commands.has_permissions(manage_roles=True)
 async def admin (ctx, member : discord.User=None):
+    # Check if Admin role exists and create it if not then assigne it
     if member == None:
         await ctx.channel.send(f'Usage should be `!admin <member tagged>`')
         return
@@ -42,7 +43,11 @@ async def admin (ctx, member : discord.User=None):
     await ctx.channel.send(f'{member} is now an admin')
 
 @bot.command(name="mute")
-async def mute (ctx, member : discord.User=None): # When !mute xxx is called / disabling all textual channels permissions
+async def mute (ctx, member : discord.User=None):
+    # When !mute xxx is called / disabling all textual channels permissions
+    if member == None:
+        await ctx.channel.send(f'Usage should be `!mute <member tagged>`')
+        return
     ghost_role = discord.utils.get(ctx.guild.roles, name="GHOST")
     if not ghost_role :
         mute_perm = discord.Permissions(send_messages=False)
@@ -50,7 +55,7 @@ async def mute (ctx, member : discord.User=None): # When !mute xxx is called / d
         for channel in ctx.guild.channels:
             await channel.set_permissions(ghost_role, speak=False, send_messages=False, read_message_history=True, read_messages=False)
     r = False
-    for role in member.roles : 
+    for role in member.roles :
         if role.name == "GHOST" :
             r = True
     if r :
