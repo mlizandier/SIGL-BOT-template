@@ -33,7 +33,9 @@ async def ban (ctx, member : discord.User=None, reason = None):
 @bot.command(name="admin")
 @commands.has_permissions(manage_roles=True)
 async def admin (ctx, member : discord.User=None):
-
+    if member == None:
+        await ctx.channel.send(f'Usage should be `!admin <member tagged>`')
+        return
     admin_role = None
     for role in ctx.guild.roles:
         if role.name == "Admin":
