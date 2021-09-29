@@ -41,26 +41,23 @@ async def admin (ctx, member : discord.User=None):
 
 @bot.command(name="mute")
 async def mute (ctx, member : discord.User=None): # When !mute xxx is called / disabling all textual channels permissions
-    ghost_role = None
-    for role in ctx.guild.roles:
-        if role.name == "GHOST":
-            ghost_role = role
-        else : 
-            perms = 
-            ctx.guild.create_role(name="GHOST", permissions=perms)
-    await member.add_roles(ghost_role)
-    await ctx.channel.send(f'{member} is now a ghost')
-    # print("test 0")
-    # if role : 
-    #     print("test 1")
-    #     if Ghost in member.roles: 
-    #         await member.delete_roles(member, get(member.guild.roles, name="Ghost"))
-    #     else:
-    #         await member.add_roles(member, get(member.guild.roles, name="Ghost"))
-    # else :
-    #     print("test 2")
-    #     await ctx.create_role(ctx.guild, name='Ghost', permissions=perms)
-    #     await member.add_roles(member, get(member.guild.roles, name="Ghost"))
+    ghost_role = discord.utils.get(ctx.guild.roles, name="GHOST")
+    if not ghost_role :
+        mute_perm = discord.Permissions(send_messages=False)
+        ghost_role = await ctx.guild.create_role(name="GHOST", permissions=mute_perm)
+        for channel in ctx.guild.channels:
+            await channel.set_permissions(ghost_role, speak=False, send_messages=False, read_message_history=True, read_messages=False)
+    r = False
+    for role in member.roles : 
+        if role.name == "GHOST" :
+            r = True
+    if r :
+        await member.remove_roles(ghost_role)
+        await ctx.channel.send(f'{member} is now a human again')
+    else :
+        await ctx.channel.send(f'{member} is now a ghost')
+        await member.add_roles(ghost_role)
+
 
 @bot.command(name="ban")
 async def ban (ctx, member : discord.User=None, reason = None):
