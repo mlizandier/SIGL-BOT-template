@@ -1,9 +1,12 @@
 import os
 from discord.ext import commands
+import discord
+
+DISCORD_TOKEN = os.getenv('DISCORD_KEY')
 
 bot = commands.Bot(
     command_prefix="!",  # Change to desired prefix
-    case_insensitive=True  # Commands aren't case-sensitive
+    case_insensitive=True  # Commands aren't case-sensitives
 )
 
 bot.author_id = 238762143485394944  # Change to your discord id!!!
@@ -17,5 +20,10 @@ async def on_ready():  # When the bot is ready
 async def pong(ctx):
     await ctx.send('pong')
 
-token = "ODkyODIxNzY0OTE5Mzk4NDYw.YVSfEA.FhP8k4QEeDlOuOXNcNM_hZ50d9c"
+@bot.command()
+async def count(ctx):
+    members = ctx.guild.member_count
+    await ctx.send(str(members) + ' members are on this server')
+
+token = DISCORD_TOKEN
 bot.run(token)  # Starts the bot
