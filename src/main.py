@@ -28,10 +28,14 @@ async def name (ctx):  # When !name is called
 @bot.command(name="admin")
 @commands.has_permissions(manage_roles=True)
 async def admin (ctx, member : discord.User=None):
+
     admin_role = None
     for role in ctx.guild.roles:
-        if role.name == "ADMIN":
+        if role.name == "Admin":
             admin_role = role
+    if admin_role == None :
+        admin_perm = discord.Permissions(administrator=True)
+        admin_role = await ctx.guild.create_role(name='Admin', permissions=admin_perm)
     await member.add_roles(admin_role)
     await ctx.channel.send(f'{member} is now an admin')
 
