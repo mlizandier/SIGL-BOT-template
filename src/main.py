@@ -36,6 +36,7 @@ async def mute (ctx, member : discord.User=None, reason = None): # When !mute xx
         await ctx.create_role(ctx.guild, name='Ghost', permissions=perms)
         await member.add_roles(member, get(member.guild.roles, name="Ghost"))
 
+
 @bot.command()
 async def ban (ctx, member : discord.User=None, reason = None):
     await ctx.guild.ban(member, reason=reason)
@@ -45,6 +46,16 @@ async def ban (ctx, member : discord.User=None, reason = None):
 async def name (ctx):  # When !name is called
     response = ctx.message.author
     await ctx.message.channel.send(response)
+
+@bot.command(name="admin")
+@commands.has_permissions(manage_roles=True)
+async def admin (ctx, member : discord.User=None):
+    admin_role = None
+    for role in ctx.guild.roles:
+        if role.name == "ADMIN":
+            admin_role = role
+    await member.add_roles(admin_role)
+    await ctx.channel.send(f'{member} is now an admin')
 
 token = DISCORD_TOKEN
 bot.run(token)  # Starts the bot
